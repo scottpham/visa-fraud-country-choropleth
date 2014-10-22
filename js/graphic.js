@@ -96,12 +96,12 @@ function render(w) {
         //define color scale
         var color = d3.scale.quantize()
             .domain([0, lcaMax ])
-            .range(colorbrewer.Oranges[5]);
+            .range(colorbrewer.YlGn[5]);
 
         //initialize tip
         tip = d3.tip().attr("class", "d3-tip").html(function(d) { 
             var name = d.properties.name
-            return "<p>" + name + "</p>LCAs: " + visasByState[name]; })
+            return "<p>" + name + "</p>H-1B Visas: " + visasByState[name]; })
 
         svg.call(tip);
 
@@ -123,6 +123,12 @@ function render(w) {
                 var name = d.properties.name
                 return color(visasByState[name]);
             }); 
+
+        svg.append("path")
+            .datum(topojson.mesh(us, us.objects.states, function (a, b) {return a === b; }))
+            .attr("class", "state boundary")
+            .attr("d", path);
+
     }//end function ready
 
 
