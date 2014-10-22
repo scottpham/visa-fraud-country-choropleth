@@ -54,12 +54,15 @@ function render(w) {
     width = w;
 
     //calculate height against container width
-    var height = Math.ceil((width * aspect_height) / aspect_width) - margin.top - margin.bottom;
+    var height = Math.ceil((width * aspect_height) / aspect_width); // - margin.top - margin.bottom;
 
+    //tie scale to width
+    var scaleNum = w;
+    console.log(scaleNum);
     //default us projection
     var projection = d3.geo.albersUsa()
-        .scale(800)
-        .translate([width / 2, height / 2]);
+        .scale(scaleNum)
+        .translate([w/2.5, height / 2]);
 
     //define path
     var path = d3.geo.path()
