@@ -98,6 +98,13 @@ function render(w) {
             .domain([0, lcaMax ])
             .range(colorbrewer.Oranges[5]);
 
+        //initialize tip
+        tip = d3.tip().attr("class", "d3-tip").html(function(d) { 
+            var name = d.properties.name
+            return "<p>" + name + "</p>LCAs: " + visasByState[name]; })
+
+        svg.call(tip);
+
         //append group of states to svg
         svg.append("g")
               .attr("class", "states")
@@ -105,7 +112,10 @@ function render(w) {
               .data(statesTopo.features)
             .enter().append("path")
               .attr("class", function(d) { return "state " + d.properties.name; })
-              .attr("d", path);
+              .attr("d", path)
+            .on("mouseover", tip.show)
+            .on("mouseout", tip.hide);
+
         //colors
         svg.selectAll(".state")
             .data(statesTopo.features)
@@ -113,13 +123,6 @@ function render(w) {
                 var name = d.properties.name
                 return color(visasByState[name]);
             }); 
-
-            // .style("fill", function(d){ 
-            //     var string = d.properties.name;
-            //     upper = string.toUpperCase();
-            //     return color(rateByCounty[upper]);
-            //   })
-
     }//end function ready
 
 
