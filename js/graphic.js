@@ -72,7 +72,7 @@ function render(w) {
         .attr("height", height + margin.top + margin.bottom);
 
     queue()
-        .defer(d3.json, "js/states.json")
+        .defer(d3.json, "states.json")
         .defer(d3.csv, "h1b.csv")
         .await(ready);
 
@@ -96,7 +96,7 @@ function render(w) {
         //define color scale
         var color = d3.scale.quantize()
             .domain([0, lcaMax ])
-            .range(colorbrewer.Greens[5]);
+            .range(colorbrewer.Oranges[5]);
 
         //append group of states to svg
         svg.append("g")
@@ -104,8 +104,21 @@ function render(w) {
             .selectAll("path")
               .data(statesTopo.features)
             .enter().append("path")
-              .attr("class", function(d) { return d.properties.name; })
-              .attr("d", path); 
+              .attr("class", function(d) { return "state " + d.properties.name; })
+              .attr("d", path);
+        //colors
+        svg.selectAll(".state")
+            .data(statesTopo.features)
+            .style("fill", function(d){
+                var name = d.properties.name
+                return color(visasByState[name]);
+            }); 
+
+            // .style("fill", function(d){ 
+            //     var string = d.properties.name;
+            //     upper = string.toUpperCase();
+            //     return color(rateByCounty[upper]);
+            //   })
 
     }//end function ready
 
