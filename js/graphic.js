@@ -26,7 +26,7 @@ var colors = {
 //check for svg
 $(window).load(function() {
     draw_graphic();
-}
+});
 
 function draw_graphic(){
     if (Modernizr.svg){
@@ -37,7 +37,7 @@ function draw_graphic(){
     }
 }
 
-function render(width) {
+function render(w) {
 
     //empty object for storing mobile dependent variables
     var mobile = {};
@@ -49,62 +49,67 @@ function render(width) {
         }
     } 
     //call mobile check
-    ifMobile(width);
+    ifMobile(w);
+
+    width = w;
+
     //calculate height against container width
     var height = Math.ceil((width * aspect_height) / aspect_width) - margin.top - margin.bottom;
 
+    //default us projection
+    var projection = d3.geo.albersUsa()
+        .scale(800)
+        .translate([width / 2, height / 2]);
 
-    var x = d3.scale.linear().range([0, width]),
-        y = d3.scale.ordinal().rangeRoundBands([0, height], 0.15);
-
-    var format = d3.format("0.2f"); //formats to two decimal places
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .ticks(tickNumber)
-        .tickFormat()
-        .orient("top")
-        .tickSize(5, 0, 0);
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickSize(5, 0, 0);
+    //define path
+    var path = d3.geo.path()
+        .projection(projection);
 
     //create main svg container
+    //would normally append a g but don't need because no chart
     var svg = d3.select("#graphic").append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("height", height + margin.top + margin.bottom);
 
-    //tooltip
-    var div = d3.select("#graphic").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+    queue()
+        .defer(d3.json, "js/states.json")
+        .defer(d3.csv, "h1b.csv")
+        .await(ready);
 
-    //gridlines (call this later)
-    var make_x_axis = function() { 
-        return d3.svg.axis()
-            .scale(x)
-                .orient("bottom")
-                .ticks(tickNumber)
-            }
+    //define object for state/visa value pairs
+    var visasByState = [];
 
-    //asynchronous csv call
-    d3.csv("DATAFILE.CSV", type, function(error, data) {
+    //for tooltip
+    var commaFormat = d3.format(",f"); //formats to two decimal places
 
-        //BUILD GRID
+    function ready(error, us, visa){
+        //get an array of arrays states/lcas 
+        visa.forEach(function(d){ 
+            visasByState[d.state] = +d.lcas;
+        })
+
+        var statesTopo = topojson.feature(us, us.objects.states);
+
+        //define max lca value
+        lcaMax = d3.max(visa, function(d){ return +d.lcas });
+
+        //define color scale
+        var color = d3.scale.quantize()
+            .domain([0, lcaMax ])
+            .range(colorbrewer.Greens[5]);
+
+        //append group of states to svg
         svg.append("g")
-            .attr("class", "grid")
-            .attr("transform", "translate(0," + height + ")")
-            .call(make_x_axis()
-                .tickSize((-height - 10), 0, 0) //grid lines are actually ticks
-                .tickFormat("")
-            )
-    
-    //end of csv call function
-    });
+              .attr("class", "states")
+            .selectAll("path")
+              .data(statesTopo.features)
+            .enter().append("path")
+              .attr("class", function(d) { return d.properties.name; })
+              .attr("d", path); 
+
+    }//end function ready
+
+
 
     //coercion function called back during csv call
     function type(d){
