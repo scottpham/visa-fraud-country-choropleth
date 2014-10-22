@@ -96,7 +96,7 @@ function render(w) {
         //define color scale
         var color = d3.scale.quantize()
             .domain([0, lcaMax ])
-            .range(colorbrewer.YlGn[5]);
+            .range(colorbrewer.Oranges[5]);
 
         //initialize tip
         tip = d3.tip().attr("class", "d3-tip").html(function(d) { 
