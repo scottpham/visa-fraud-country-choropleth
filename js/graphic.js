@@ -109,9 +109,11 @@ function render(w) {
         //initialize tip
         tip = d3.tip().attr("class", "d3-tip").html(function(d) { 
             var name = d.properties.name
-            return "<p>" + name + "</p>H-1B Visas (2013): " + commaFormat(visasByState[name]); })
+            return "<p>" + name + "</p>LCAs in 2013: " + commaFormat(visasByState[name]); })
 
         svg.call(tip);
+        //hide tip on resize
+        tip.hide()
 
         //make sidebar right height
         //this only matters b/c of background color
@@ -140,10 +142,11 @@ function render(w) {
             });
 
             //list of employers
-            div.html("<p><span style='font-size:18px'>" + d.properties.name + "</span></p><p>Top Five Employers By H1-B Applications: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
+            div.html("<p><span style='font-size:18px'>" + d.properties.name + "</span></p><p>Top Five Employers By LCAs: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
             
             return div;
         }
+
 
         //append group of states to svg
         svg.append("g")
