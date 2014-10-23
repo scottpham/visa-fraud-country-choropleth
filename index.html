@@ -152,13 +152,29 @@
         
         /*map styles*/
         .state {
-            stroke: lightgray;
-            stroke-width:0.5;
+          /*  stroke: gray;*/
+        /*    shape-rendering: crispEdges;
+            stroke-width:0.5;*/
             fill: #0B403F;
+        }
+
+        .state:hover{
+            stroke-width: 2px;
+            stroke: black;
+            shape-rending: crispEdges;
+            opacity: 0.5;
         }
 
         .boundary {
             fill: none;
+            stroke: black;
+            stroke-width: 1px;
+        }
+
+        .interior {
+            fill: none;
+            stroke-width: .5px;
+            stroke: gray;
         }
         
         #graphic {
@@ -172,7 +188,6 @@
         #sidebar{
             background-color: #f4f8f9;
             width:30%;
-            border:1px;
             float:right;
 
         }
@@ -184,7 +199,7 @@
           min-height: 170px;                 
           padding: 6px;             
           font: 12px sans-serif;        
-          background: gray;   
+          background: slategray;   
           border: 0px;      
           border-radius: 8px;           
           pointer-events: none;    

@@ -57,13 +57,11 @@ function render(w) {
     } 
     //call mobile check
     ifMobile(w);
-    console.log(mobile.scale);
 
     width = w;
 
     //tie scale to width
     var scaleNum = 1.1 * w;
-    console.log(scaleNum);
 
     //default us projection
     var projection = d3.geo.albersUsa()
@@ -88,8 +86,6 @@ function render(w) {
 
     //define array for state/visa value pairs
     var visasByState = []; //total visas
-    // var companyByState = []; //top five companies
-    // var lcasByState = [];
 
     //for tooltip
     var commaFormat = d3.format(",f"); //formats to two decimal places
@@ -99,9 +95,6 @@ function render(w) {
         visa.forEach(function(d){ 
             visasByState[d.state] = +d.lcas;
         });
-
-        console.log(companies)
-
 
         var statesTopo = topojson.feature(us, us.objects.states);
 
@@ -172,9 +165,17 @@ function render(w) {
                 return color(visasByState[name]);
             }); 
 
+
+        //write path for outline
         svg.append("path")
             .datum(topojson.mesh(us, us.objects.states, function (a, b) {return a === b; }))
             .attr("class", "state boundary")
+            .attr("d", path);
+
+        //write path for interiors
+        svg.append("path")
+            .datum(topojson.mesh(us, us.objects.states, function(a,b) { return a !==b; }))
+            .attr("class", "interior")
             .attr("d", path);
 
     }//end function ready
