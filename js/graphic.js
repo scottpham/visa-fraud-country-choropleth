@@ -77,19 +77,37 @@ function render(w) {
     queue()
         .defer(d3.json, "states.json")
         .defer(d3.csv, "h1b.csv")
+        .defer(d3.csv, "topfive.csv")
         .await(ready);
 
-    //define object for state/visa value pairs
-    var visasByState = [];
+    //define array for state/visa value pairs
+    var visasByState = []; //total visas
+    var companyByState = []; //top five companies
+    var lcasByState = [];
 
     //for tooltip
     var commaFormat = d3.format(",f"); //formats to two decimal places
 
-    function ready(error, us, visa){
+    function ready(error, us, visa, companies){
         //get an array of arrays states/lcas 
         visa.forEach(function(d){ 
             visasByState[d.state] = +d.lcas;
-        })
+        });
+
+       //  companies.forEach(function(d){
+       //      var object = {};
+       //      object[d.state] = d.company;
+       //      companyByState.push(object);
+       //  });
+
+       // companies.forEach(function(d){
+       //      var object = {};
+       //      object[d.company] = d.lcas;
+       //      lcasByState.push(object);
+       //  });
+
+        console.log(companies)
+
 
         var statesTopo = topojson.feature(us, us.objects.states);
 
@@ -108,6 +126,29 @@ function render(w) {
 
         svg.call(tip);
 
+        //create infobox using old tooltip code
+        var div = d3.select("#graphic").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 1);
+
+        //function that writes html to list
+        function listRollOver(d){
+            //empty array for top five employers
+            list = [];
+
+            //filter based on state
+            $.each(companies, function(i, v){
+                if (v.state == d.properties.name){
+                    list.push(v.company);
+                    }
+            });
+
+            //list of employers
+            div.html("<p>" + d.properties.name + "</p><p>Top Five H-1B Employers: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
+            
+            return div;
+        }
+
         //append group of states to svg
         svg.append("g")
               .attr("class", "states")
@@ -116,7 +157,10 @@ function render(w) {
             .enter().append("path")
               .attr("class", function(d) { return "state " + d.properties.name; })
               .attr("d", path)
-            .on("mouseover", tip.show)
+            .on("mouseover", function(d){
+                tip.show(d);
+                listRollOver(d);
+            })
             .on("mouseout", tip.hide);
 
         //colors
