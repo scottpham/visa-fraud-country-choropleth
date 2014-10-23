@@ -117,6 +117,9 @@ function render(w) {
         //this only matters b/c of background color
         $("#sidebar").height(height + 5);
 
+        //clean out whatever might be in there from a previous resize
+        $("#sidebar").empty();
+
         //create infobox using old tooltip strategy
         var div = d3.select("#sidebar")
             .append("div")
@@ -137,7 +140,7 @@ function render(w) {
             });
 
             //list of employers
-            div.html("<p>" + d.properties.name + "</p><p>Top Five Employers By H1-B Applications: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
+            div.html("<p><span style='font-size:18px'>" + d.properties.name + "</span></p><p>Top Five Employers By H1-B Applications: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
             
             return div;
         }
