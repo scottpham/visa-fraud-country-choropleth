@@ -128,6 +128,7 @@ function render(w) {
         var div = d3.select("#sidebar")
             .append("div")
             .attr("class", "tooltip")
+            .html("Hover over a state for more info")
             .style("opacity", 1);
 
         //function that writes html to list

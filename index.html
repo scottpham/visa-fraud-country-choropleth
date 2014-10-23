@@ -180,7 +180,7 @@
         div.tooltip {   
        /*   position: absolute;  */         
           text-align: left;  
-          min-width: 170px;                  
+          min-width: 140px;                  
           min-height: 170px;                 
           padding: 6px;             
           font: 12px sans-serif;        
@@ -203,6 +203,10 @@
                 float: none;
                 width: 100%;
             }
+
+            .d3-tip {
+                font-size: 11px;
+            }
         }
 
 
@@ -213,8 +217,9 @@
     <h2>SUBHEAD</h2>
     <p>FIRST GRAF</p>
 
-    <div id="graphic"></div><div id="sidebar"></div>
-
+    <div id="parent">
+        <div id="graphic"></div><div id="sidebar"></div>
+    <div>
 
    <!-- <div class="footnotes">
         <h4>Notes</h4>
