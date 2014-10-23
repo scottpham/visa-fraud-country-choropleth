@@ -1,13 +1,13 @@
-var mobileThreshold = 300, //set to 500 for testing
+var mobileThreshold = 500, //set to 500 for testing
     aspect_width = 16,
     aspect_height = 9;
 
 //standard margins
 var margin = {
-    top: 30,
-    right: 30,
-    bottom: 20,
-    left: 30
+    top: 10,
+    right: 10,
+    bottom: 10,
+    left: 10
 };
 //jquery shorthand
 var $graphic = $('#graphic');
@@ -41,28 +41,34 @@ function render(w) {
 
     //empty object for storing mobile dependent variables
     var mobile = {};
+
+    //calculate height against container width
+    var height = Math.ceil((w * aspect_height) / aspect_width);
+
     //check for mobile
     function ifMobile (w) {
         if(w < mobileThreshold){
+            mobile.scale = [w/2, height/2];
         }
         else{
+            mobile.scale = [w/2, height/2];
+
         }
     } 
     //call mobile check
     ifMobile(w);
+    console.log(mobile.scale);
 
     width = w;
 
-    //calculate height against container width
-    var height = Math.ceil((width * aspect_height) / aspect_width); // - margin.top - margin.bottom;
-
     //tie scale to width
-    var scaleNum = w;
+    var scaleNum = 1.1 * w;
     console.log(scaleNum);
+
     //default us projection
     var projection = d3.geo.albersUsa()
         .scale(scaleNum)
-        .translate([w/2.5, height / 2]);
+        .translate(mobile.scale);
 
     //define path
     var path = d3.geo.path()
@@ -71,8 +77,8 @@ function render(w) {
     //create main svg container
     //would normally append a g but don't need because no chart
     var svg = d3.select("#graphic").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("width", width - margin.left - margin.right)
+        .attr("height", height);
 
     queue()
         .defer(d3.json, "states.json")
@@ -82,8 +88,8 @@ function render(w) {
 
     //define array for state/visa value pairs
     var visasByState = []; //total visas
-    var companyByState = []; //top five companies
-    var lcasByState = [];
+    // var companyByState = []; //top five companies
+    // var lcasByState = [];
 
     //for tooltip
     var commaFormat = d3.format(",f"); //formats to two decimal places
@@ -93,18 +99,6 @@ function render(w) {
         visa.forEach(function(d){ 
             visasByState[d.state] = +d.lcas;
         });
-
-       //  companies.forEach(function(d){
-       //      var object = {};
-       //      object[d.state] = d.company;
-       //      companyByState.push(object);
-       //  });
-
-       // companies.forEach(function(d){
-       //      var object = {};
-       //      object[d.company] = d.lcas;
-       //      lcasByState.push(object);
-       //  });
 
         console.log(companies)
 
@@ -116,18 +110,23 @@ function render(w) {
 
         //define color scale
         var color = d3.scale.quantize()
-            .domain([0, lcaMax ])
+            .domain([0, lcaMax])
             .range(colorbrewer.Oranges[5]);
 
         //initialize tip
         tip = d3.tip().attr("class", "d3-tip").html(function(d) { 
             var name = d.properties.name
-            return "<p>" + name + "</p>H-1B Visas: " + visasByState[name]; })
+            return "<p>" + name + "</p>H-1B Visas (2013): " + commaFormat(visasByState[name]); })
 
         svg.call(tip);
 
-        //create infobox using old tooltip code
-        var div = d3.select("#graphic").append("div")
+        //make sidebar right height
+        //this only matters b/c of background color
+        $("#sidebar").height(height + 5);
+
+        //create infobox using old tooltip strategy
+        var div = d3.select("#sidebar")
+            .append("div")
             .attr("class", "tooltip")
             .style("opacity", 1);
 
@@ -144,7 +143,7 @@ function render(w) {
             });
 
             //list of employers
-            div.html("<p>" + d.properties.name + "</p><p>Top Five H-1B Employers: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
+            div.html("<p>" + d.properties.name + "</p><p>Top Five Employers By H1-B Applications: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
             
             return div;
         }
@@ -161,8 +160,9 @@ function render(w) {
                 tip.show(d);
                 listRollOver(d);
             })
-            .on("mouseout", tip.hide);
-
+            .on("mouseout", function(d){
+                tip.hide();
+            });
         //colors
         svg.selectAll(".state")
             .data(statesTopo.features)
