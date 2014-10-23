@@ -1,4 +1,4 @@
-var mobileThreshold = 500, //set to 500 for testing
+var mobileThreshold = 400, //set to 500 for testing
     aspect_width = 16,
     aspect_height = 9;
 
