@@ -112,7 +112,6 @@ function render(w) {
             return "<p>" + name + "</p>LCAs in 2013: " + commaFormat(visasByState[name]); })
 
         svg.call(tip);
-        //hide tip on resize
 
         //make sidebar right height
         //this only matters b/c of background color
