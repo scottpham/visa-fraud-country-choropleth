@@ -30,7 +30,8 @@ $(window).load(function() {
 
 function draw_graphic(){
     if (Modernizr.svg){
-        $graphic.empty();
+        $graphic.empty(); //clean out graphic div
+        $(".d3-tip").remove(); //clean tip out separately (is not in #graphic)
         var width = $graphic.width();
         render(width);
         window.onresize = draw_graphic; //very important! the key to responsiveness
@@ -159,7 +160,7 @@ function render(w) {
                 listRollOver(d);
             })
             .on("mouseout", function(d){
-                tip.hide();
+                // tip.hide();
             });
         //colors
         svg.selectAll(".state")
@@ -183,14 +184,6 @@ function render(w) {
             .attr("d", path);
 
     }//end function ready
-
-
-
-    //coercion function called back during csv call
-    function type(d){
-        d.value = +d.value;
-        return d;
-    }
 
 }//end function render    
 
