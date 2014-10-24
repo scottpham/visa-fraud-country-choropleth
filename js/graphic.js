@@ -113,7 +113,6 @@ function render(w) {
 
         svg.call(tip);
         //hide tip on resize
-        tip.hide()
 
         //make sidebar right height
         //this only matters b/c of background color
