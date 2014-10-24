@@ -149,9 +149,6 @@
         
         /*map styles*/
         .state {
-          /*  stroke: gray;*/
-        /*    shape-rendering: crispEdges;
-            stroke-width:0.5;*/
             fill: #0B403F;
         }
 
@@ -176,7 +173,7 @@
         
         #graphic {
             background-color: #f4f8f9;
-            width: 70%;
+            width: 65%;
             position: relative;
             float:left;
 
@@ -184,18 +181,15 @@
 
         #sidebar{
             background-color: #f4f8f9;
-            width:30%;
+            width:35%;
             float:right;
 
         }
 
-        div.tooltip {   
-       /*   position: absolute;  */         
-          text-align: left;  
-          min-width: 170px;                  
-          min-height: 170px;                 
-          padding: 6px;             
-          font: 11px sans-serif;        
+        div.tooltip {           
+          text-align: left;                 
+          min-height: 150px;                 
+          padding: 6px;                   
           background: slategray;   
           border: 0px;      
           border-radius: 8px;           
@@ -203,10 +197,14 @@
           color: white;
           margin-right: 5px;
           margin-top: 10px;
-          font-size: 14px;    
+          font-size: 13px;    
         }
 
-        @media (max-width: 400px) {
+        .toolhead {
+            font-size: 16px;
+        }
+         /*if screen is 400px or less*/
+        @media screen and (max-width: 400px) {
             #sidebar {
                 display: none;
             }
@@ -224,6 +222,25 @@
                 display: none;
             }
         }
+
+        /*if screen is 500 px or less*/
+        @media screen and (max-width: 520px){
+            div.tooltip {
+                font-size: 10px;
+            }
+
+            .d3-tip {
+                font-size: 11px;
+            }
+
+            .toolhead {
+                font-size: 14px;
+            }
+        }
+
+            ul {
+                padding-left: 20px;
+            }
 
 
         </style>

@@ -1,4 +1,4 @@
-var mobileThreshold = 400, //set to 500 for testing
+var mobileThreshold = 401, //set to 500 for testing
     aspect_width = 16,
     aspect_height = 9;
 
@@ -62,7 +62,7 @@ function render(w) {
     width = w;
 
     //tie scale to width
-    var scaleNum = 1.1 * w;
+    var scaleNum = 1.19 * w;
 
     //default us projection
     var projection = d3.geo.albersUsa()
@@ -141,7 +141,7 @@ function render(w) {
             });
 
             //list of employers
-            div.html("<p><span style='font-size:18px'>" + d.properties.name + "</span></p><p>Top Five Employers By LCAs: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
+            div.html("<p><span class='toolhead'>" + d.properties.name + "</span></p><p>Top Five Employers by LCAs: </p><ul><li>" + list[0] + "</li><li>" + list[1] + "</li><li>" + list[2] + "</li><li>" + list[3] + "</li><li>" + list[4] + "</li></ul>");
             
             return div;
         }
@@ -160,7 +160,7 @@ function render(w) {
                 listRollOver(d);
             })
             .on("mouseout", function(d){
-                // tip.hide();
+                tip.hide();
             });
         //colors
         svg.selectAll(".state")
